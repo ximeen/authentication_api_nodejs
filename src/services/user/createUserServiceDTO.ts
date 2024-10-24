@@ -1,9 +1,9 @@
 import z from 'zod'
 
-export const UserSchema = z.object({
+export const UserRegisterSchema = z.object({
   name: z.string(),
   username: z.string(),
   password: z.string(),
 })
 
-export type userTypes = z.infer<typeof UserSchema>
+export type userTypes = z.infer<typeof UserRegisterSchema>

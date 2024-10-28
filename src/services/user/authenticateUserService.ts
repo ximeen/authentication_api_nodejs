@@ -1,5 +1,6 @@
 import { compare } from 'bcryptjs'
-import { sign } from 'jsonwebtoken'
+import { GenerateRefreshToken } from '../../provider/generateRefreshTokenProvider'
+import { GenerateTokenProvider } from '../../provider/generateTokenProvider'
 import { prisma } from '../../utils/prisma'
 import type { authenticateUserTypes } from './authenticateUserDTO'
 
@@ -19,11 +20,16 @@ export class AuthenticateUserService {
       throw new Error('User or password incorrect')
     }
 
-    const token = sign({}, 'teste', {
-      subject: userAlreadyExist.id,
-      expiresIn: '20s',
-    })
+    // const token = sign({}, 'teste', {
+    //   subject: userAlreadyExist.id,
+    //   expiresIn: '20s',
+    // })
 
-    return token
+    const generateTokenProvider = new GenerateTokenProvider()
+    const token = await generateTokenProvider.execute(userAlreadyExist.id)
+
+    const generateRefreshToken = new GenerateRefreshToken()
+    const refreshToken = await generateRefreshToken.execute(userAlreadyExist.id)
+    return { token, refreshToken }
   }
 }
